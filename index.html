@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5-А Розклад занять з онлайн-посиланнями</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-bg: #eff6ff;
+            --link-color: #1d4ed8;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 900px;
+        }
+        h1 {
+            color: var(--primary-color);
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+        .schedule-container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .day-block {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+        .day-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0 0 20px 0;
+            border-bottom: 2px solid var(--accent-bg);
+            padding-bottom: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            table-layout: fixed;
+        }
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            padding: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            word-wrap: break-word;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background-color: var(--bg-color);
+        }
+        
+        .col-num { width: 6%; text-align: center; border-right: 1px solid var(--border-color); }
+        .col-time { width: 14%; white-space: nowrap; border-right: 1px solid var(--border-color); }
+        .col-subject { width: 50%; }
+        .col-teacher { width: 30%; border-left: 1px solid var(--border-color); }
+
+        .lesson-num {
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+			border-right: 1px solid var(--border-color);
+        }
+        .lesson-time {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+			border-right: 1px solid var(--border-color);
+        }
+        .lesson-link {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .lesson-link:hover {
+            text-decoration: underline;
+        }
+        .lesson-no-link {
+            font-weight: 500;
+        }
+        .teacher-name {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-style: italic;
+			border-left: 1px solid var(--border-color);
+        }
+        @media screen and (max-width: 768px) {
+            table { table-layout: auto; }
+            .col-num, .col-time, .col-subject, .col-teacher { width: auto; }
+            thead { display: none; }
+            tr { display: flex; flex-direction: column; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+            tr:last-child { border-bottom: none; }
+            td { padding: 4px 0; }
+            .lesson-num { text-align: left; }
+            .lesson-num::before { content: "Урок № "; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>5-А Розклад занять з онлайн-посиланнями</h1>
+    </header>
+
+    <div class="schedule-container">
+
+        <!-- ПОНЕДІЛОК -->
+        <div class="day-block">
+            <div class="day-title">Понеділок</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-num">№</th>
+                        <th class="col-time">Час</th>
+                        <th class="col-subject">Предмет</th>
+                        <th class="col-teacher">Вчитель</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="lesson-num">1</td>
+                        <td class="lesson-time">08:30 - 09:15</td>
+                        <td><a href="https://us05web.zoom.us/j/82431320468?pwd=8dF6LfFcZaIGRIFgGeLwnvaHIXFFQx.1" target="_blank" class="lesson-link">Інтегрований курс "Пізнаємо природу"</a></td>
+                        <td class="teacher-name">Зоя Василівна Скрепіль</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">2</td>
+                        <td class="lesson-time">09:25 - 10:10</td>
+                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
+                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">3</td>
+                        <td class="lesson-time">10:15 - 11:00</td>
+                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська мова</a></td>
+                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">4</td>
+                        <td class="lesson-time">11:05 - 11:50</td>
+                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська література</a></td>
+                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">5</td>
+                        <td class="lesson-time">12:05 - 12:50</td>
+                        <td><a href="https://us05web.zoom.us/j/85072312027?pwd=gX78CHZQoddeOeO75XVvY3lY40OXdu.1" target="_blank" class="lesson-link">Інформатика</a></td>
+                        <td class="teacher-name">Наталія Володимирівна Лобанова</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">6</td>
+                        <td class="lesson-time">12:55 - 13:40</td>
+                        <td><a href="https://us05web.zoom.us/" target="_blank" class="lesson-link">Інтегрований курс "Мистецтво"(ссылки нет)</a></td>
+                        <td class="teacher-name">Вікторія Сергіївна Мухіна</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ВІВТОРОК -->
+        <div class="day-block">
+            <div class="day-title">Вівторок</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-num">№</th>
+                        <th class="col-time">Час</th>
+                        <th class="col-subject">Предмет</th>
+                        <th class="col-teacher">Вчитель</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="lesson-num">1</td>
+                        <td class="lesson-time">08:30 - 09:15</td>
+                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Етика</a></td>
+                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">2</td>
+                        <td class="lesson-time">09:25 - 10:10</td>
+                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
+                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">3</td>
+                        <td class="lesson-time">10:15 - 11:00</td>
+                        <td><a href="https://us05web.zoom.us/j/5654262686?pwd=R1awuc67LN8KO0yiExjEuF4vRiuXZ4.1" target="_blank" class="lesson-link">Інтегрований курс "Вступ до історії України та громадянської освіти"</a></td>
+                        <td class="teacher-name">Крістіна Володимирівна Кротова</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">4</td>
+                        <td class="lesson-time">11:05 - 11:50</td>
+                        <td><a href="http://meet.google.com/dtk-pchw-rdg" target="_blank" class="lesson-link">Інтегрований курс "Здоров'я, безпека та добробут"</a></td>
+                        <td class="teacher-name">Анжеліка Миколаївна Демидова</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">5</td>
+                        <td class="lesson-time">12:05 - 12:50</td>
+                        <td><a href="https://us05web.zoom.us/j/82430791395?pwd=ZytxY1M4TzJSaWdTVVY5cElJRlFudz09" target="_blank" class="lesson-link">Іноземна мова (англійська)</a></td>
+                        <td class="teacher-name">Яніна Олександрівна Матвєєва</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" class="lesson-num">6</td>
+                        <td rowspan="2" class="lesson-time">12:55 - 13:40</td>
+                        <td><a href="https://us05web.zoom.us/j/7909395864?pwd%3DMkoyMHhMeGtINUlNQXZJT3FZNXk1Zz09&sa=D&source=editors&ust=1788336592674091&usg=AOvVaw1oDKE7c4ifVbXtEo7MUoXJ" target="_blank" class="lesson-link">Друга іноземна мова (німецька) (1гр)</a></td>
+                        <td class="teacher-name">Віталій Вікторович Іщенко</td>
+                    </tr>
+					<tr>
+                        <td><a href="https://us04web.zoom.us/j/77254063267?pwd=f7p2nR7aypizODSX59G6i0rYSwKATd.1" target="_blank" class="lesson-link">Друга іноземна мова (німецька) (2гр)</a></td>
+                        <td class="teacher-name">Тетяна Сергіївна Сергєєвська</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">7</td>
+                        <td class="lesson-time">13:45 - 14:30</td>
+                        <td><a href="http://meet.google.com/dtk-pchw-rdg" target="_blank" class="lesson-link">Фізична культура</a></td>
+                        <td class="teacher-name">Анжеліка Миколаївна Демидова</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- СЕРЕДА -->
+        <div class="day-block">
+            <div class="day-title">Середа</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-num">№</th>
+                        <th class="col-time">Час</th>
+                        <th class="col-subject">Предмет</th>
+                        <th class="col-teacher">Вчитель</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="lesson-num">1</td>
+                        <td class="lesson-time">08:30 - 09:15</td>
+                        <td><a href="https://us05web.zoom.us/j/82430791395?pwd=ZytxY1M4TzJSaWdTVVY5cElJRlFudz09" target="_blank" class="lesson-link">Іноземна мова (англійська)</a></td>
+                        <td class="teacher-name">Яніна Олександрівна Матвєєва</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">2</td>
+                        <td class="lesson-time">09:25 - 10:10</td>
+                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
+                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">3</td>
+                        <td class="lesson-time">10:15 - 11:00</td>
+                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська мова</a></td>
+                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">4</td>
+                        <td class="lesson-time">11:05 - 11:50</td>
+                        <td><a href="https://us05web.zoom.us/j/82431320468?pwd=8dF6LfFcZaIGRIFgGeLwnvaHIXFFQx.1" target="_blank" class="lesson-link">Інтегрований курс "Пізнаємо природу"</a></td>
+                        <td class="teacher-name">Зоя Василівна Скрепіль</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">5</td>
+                        <td class="lesson-time">12:05 - 12:50</td>
+                        <td><a href="https://us05web.zoom.us/j/85072312027?pwd=gX78CHZQoddeOeO75XVvY3lY40OXdu.1" target="_blank" class="lesson-link">Інформатика</a></td>
+                        <td class="teacher-name">Наталія Володимирівна Лобанова</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">6</td>
+                        <td class="lesson-time">12:55 - 13:40</td>
+                        <td><a href="http://meet.google.com/dtk-pchw-rdg" target="_blank" class="lesson-link">Фізична культура</a></td>
+                        <td class="teacher-name">Анжеліка Миколаївна Демидова</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ЧЕТВЕР -->
+        <div class="day-block">
+            <div class="day-title">Четвер</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-num">№</th>
+                        <th class="col-time">Час</th>
+                        <th class="col-subject">Предмет</th>
+                        <th class="col-teacher">Вчитель</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2" class="lesson-num">1</td>
+                        <td rowspan="2" class="lesson-time">08:30 - 09:15</td>
+                        <td><a href="https://us05web.zoom.us/j/7909395864?pwd%3DMkoyMHhMeGtINUlNQXZJT3FZNXk1Zz09&sa=D&source=editors&ust=1788336592674091&usg=AOvVaw1oDKE7c4ifVbXtEo7MUoXJ" target="_blank" class="lesson-link">Друга іноземна мова (німецька) (1гр)</a></td>
+                        <td class="teacher-name">Віталій Вікторович Іщенко</td>
+                    </tr>
+					<tr>
+                        <td><a href="https://us04web.zoom.us/j/77254063267?pwd=f7p2nR7aypizODSX59G6i0rYSwKATd.1" target="_blank" class="lesson-link">Друга іноземна мова (німецька) (2гр)</a></td>
+                        <td class="teacher-name">Тетяна Сергіївна Сергєєвська</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">2</td>
+                        <td class="lesson-time">09:25 - 10:10</td>
+                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
+                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">3</td>
+                        <td class="lesson-time">10:15 - 11:00</td>
+                        <td><a href="https://us05web.zoom.us/j/82430791395?pwd=ZytxY1M4TzJSaWdTVVY5cElJRlFudz09" target="_blank" class="lesson-link">Іноземна мова (англійська)</a></td>
+                        <td class="teacher-name">Яніна Олександрівна Матвєєва</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">4</td>
+                        <td class="lesson-time">11:05 - 11:50</td>
+                        <td><a href="http://meet.google.com/dtk-pchw-rdg" target="_blank" class="lesson-link">Фізична культура</a></td>
+                        <td class="teacher-name">Анжеліка Миколаївна Демидова</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">5</td>
+                        <td class="lesson-time">12:05 - 12:50</td>
+                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська мова</a></td>
+                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">6</td>
+                        <td class="lesson-time">12:55 - 13:40</td>
+                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська література</a></td>
+                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- П'ЯТНИЦЯ -->
+        <div class="day-block">
+            <div class="day-title">П'ятниця</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-num">№</th>
+                        <th class="col-time">Час</th>
+                        <th class="col-subject">Предмет</th>
+                        <th class="col-teacher">Вчитель</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="lesson-num">1</td>
+                        <td class="lesson-time">08:30 - 09:15</td>
+                        <td><a href="https://us05web.zoom.us/j/82430791395?pwd=ZytxY1M4TzJSaWdTVVY5cElJRlFudz09" target="_blank" class="lesson-link">Іноземна мова (англійська)</a></td>
+                        <td class="teacher-name">Яніна Олександрівна Матвєєва</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">2</td>
+                        <td class="lesson-time">09:25 - 10:10</td>
+                        <td><a href="https://us05web.zoom.us/j/5654262686?pwd=R1awuc67LN8KO0yiExjEuF4vRiuXZ4.1" target="_blank" class="lesson-link">Інтегрований курс "Вступ до історії України та громадянської освіти"</a></td>
+                        <td class="teacher-name">Крістіна Володимирівна Кротова</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">3</td>
+                        <td class="lesson-time">10:15 - 11:00</td>
+                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська мова</a></td>
+                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">4</td>
+                        <td class="lesson-time">11:05 - 11:50</td>
+                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
+                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">5</td>
+                        <td class="lesson-time">12:05 - 12:50</td>
+                        <td><a href="https://us05web.zoom.us/j/84775108035?pwd=TzQ1Mm5tdFF3MmFsUWttajYwd1o5dz09" target="_blank" class="lesson-link">Зарубіжна література</a></td>
+                        <td class="teacher-name">Оксана Анатоліївна Середа</td>
+                    </tr>
+                    <tr>
+                        <td class="lesson-num">6</td>
+                        <td class="lesson-time">12:55 - 13:40</td>
+                        <td><a href="https://us05web.zoom.us/j/87234444805?pwd=Rmt3SW80cVBCaFNvZWsrMzd4VHlkQT09" target="_blank" class="lesson-link">Технології</a></td>
+                        <td class="teacher-name">Яна Миколаївна Олійник</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>
