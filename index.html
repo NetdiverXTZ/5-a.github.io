@@ -134,8 +134,11 @@
 
     <header>
         <h1>5-А Розклад занять з онлайн-посиланнями</h1>
-		<h1>Отакэ</h1>
     </header>
+	<div class="container">
+		<button id="startBtn" onclick="startScheduler()">Активувати дзвоник</button>
+		<div id="status">Натисни кнопку для активації звука</div>
+	</div>
 
     <div class="schedule-container">
 
@@ -420,5 +423,76 @@
 
     </div>
 
+<script>
+// Ссылка на аудиофайл
+const SOUND_URL = "1.mp3";
+
+// 1. МАССИВ ВРЕМЕННЫХ ТОЧЕК. Сюда можно добавлять любое количество времени.
+const alarmTimes = [
+    { hour: 8, minute: 29 },
+    { hour: 9, minute: 24 },
+	{ hour: 10, minute: 14 },
+	{ hour: 11, minute: 04 },
+	{ hour: 12, minute: 04 },
+    { hour: 12, minute: 54 }
+];
+
+function startScheduler() {
+    const btn = document.getElementById('startBtn');
+    const statusDiv = document.getElementById('status');
+    
+    btn.disabled = true;
+    btn.innerText = "Дзвоник активовано ⏰";
+    statusDiv.innerHTML = "Чекаємо на наступний урок...";
+
+    // Позволяет проиграть пустой звук сразу после клика, 
+    // чтобы окончательно «разблокировать» аудио-движок браузера
+    const initAudio = new Audio(SOUND_URL);
+    initAudio.volume = 0;
+    initAudio.play().catch(() => {});
+
+    // 2. ЗАПУСК ЕЖЕМИНУТНОЙ ПРОВЕРКИ
+    // Функция checkTime будет срабатывать каждые 60 000 миллисекунд (1 минута)
+    setInterval(() => {
+        checkTime(statusDiv);
+    }, 60000);
+
+    // Делаем также один моментальный запуск при нажатии, 
+    // чтобы не ждать целую минуту до первой проверки
+    checkTime(statusDiv);
+}
+
+function checkTime(statusElement) {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    // Каждую минуту выводим в консоль текущее время для контроля
+    console.log(`Проверка времени... Сейчас: ${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`);
+
+    // 3. ПРОВЕРЯЕМ, СОВПАДАЕТ ЛИ СЕЙЧАС ХОТЯ БЫ С ОДНОЙ ТОЧКОЙ ИЗ МАССИВА
+    const hasAlarm = alarmTimes.some(time => time.hour === currentHour && time.minute === currentMinute);
+
+    if (hasAlarm) {
+        playSound(statusElement);
+    }
+}
+
+function playSound(statusElement) {
+    const audio = new Audio(SOUND_URL);
+    audio.play()
+        .then(() => {
+            statusElement.innerHTML = "<span style='color: green;'>🔔 Пора на урок!</span>";
+            // Через 10 секунд возвращаем стандартный статус ожидания
+            setTimeout(() => {
+                statusElement.innerHTML = "Чекаємо на наступний урок...";
+            }, 10000);
+        })
+        .catch(error => {
+            statusElement.innerHTML = "<span style='color: red;'>Помилка звука. Перезавантажте сторінку!</span>";
+            console.error(error);
+        });
+}
+</script>
 </body>
 </html>
