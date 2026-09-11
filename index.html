@@ -30,7 +30,7 @@
             text-align: center;
             margin-bottom: 30px;
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
         }
         h1 {
             color: var(--primary-color);
@@ -62,7 +62,7 @@
         }
         .schedule-container {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             display: flex;
             flex-direction: column;
             gap: 30px;
@@ -110,11 +110,12 @@
         }
         
         /* Розміри колонок */
-        .col-num { width: 6%; text-align: center; border-right: 1px solid var(--border-color); }
-        .col-time { width: 15%; white-space: nowrap; border-right: 1px solid var(--border-color); }
-        .col-subject { width: 37%; }
-        .col-teacher { width: 26%; border-left: 1px solid var(--border-color); }
-        .col-mode { width: 16%; border-left: 1px solid var(--border-color); text-align: center; }
+        .col-num { width: 5%; text-align: center; border-right: 1px solid var(--border-color); }
+        .col-time { width: 13%; white-space: nowrap; border-right: 1px solid var(--border-color); }
+        .col-subject { width: 28%; }
+        .col-teacher { width: 24%; border-left: 1px solid var(--border-color); }
+        .col-hw { width: 18%; border-left: 1px solid var(--border-color); text-align: center; }
+        .col-mode { width: 12%; border-left: 1px solid var(--border-color); text-align: center; }
 
         .lesson-num {
             font-weight: 700;
@@ -145,6 +146,13 @@
             font-style: italic;
             border-left: 1px solid var(--border-color);
         }
+        .hw-address {
+            color: var(--text-main);
+            font-size: 0.85rem;
+            border-left: 1px solid var(--border-color);
+            text-align: center;
+            word-break: break-all;
+        }
         .lesson-mode {
             color: var(--text-muted);
             font-size: 0.85rem;
@@ -152,14 +160,22 @@
             text-align: center;
         }
 
+        /* Подсветка асинхронного режима */
+        .mode-async {
+            background-color: #fee2e2 !important;
+            color: #dc2626 !important;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
         @media screen and (max-width: 768px) {
             table { table-layout: auto; }
-            .col-num, .col-time, .col-subject, .col-teacher, .col-mode { width: auto; }
+            .col-num, .col-time, .col-subject, .col-teacher, .col-hw, .col-mode { width: auto; }
             thead { display: none; }
             tr { display: flex; flex-direction: column; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
             tr:last-child { border-bottom: none; }
             td { padding: 4px 0; }
-            .lesson-num, .lesson-mode { text-align: left; }
+            .lesson-num, .lesson-mode, .hw-address { text-align: left; }
             .lesson-num::before { content: "Урок № "; }
         }
     </style>
@@ -181,6 +197,35 @@
 
     <script>
         const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRZdRAF8dkzjJh0lOpeZkSOsfqfBf62pM8VT-XWZJ7iUwkY_69VBD1_GVfexY5OE2Fv4xkRC74v2rlR/pub?output=csv';
+
+        // Карта поиска по ключевым частям фамилий
+        const hwMapBySurname = [
+            { key: 'скрепіль', val: '?' },
+            { key: 'семеняка', val: 'Telegram' },
+            { key: 'синельник', val: '?' },
+            { key: 'лобанова', val: '?' },
+            { key: 'мухіна', val: '?' },
+            { key: 'кротова', val: 'krotova.kristina.v@gmail.com' },
+            { key: 'демидова', val: 'andemidova@ukr.net' },
+            { key: 'матвєєва', val: 'Telegram' },
+            { key: 'іщенко', val: '?' },
+            { key: 'сергєєвська', val: '?' },
+            { key: 'середа', val: '?' },
+            { key: 'олійник', val: '?' },
+        ];
+
+        // Функция поиска адреса ДЗ
+        function getHwAddress(teacherName) {
+            if (!teacherName) return '';
+            
+            const cleanName = teacherName.replace(/\s+/g, ' ').trim().toLowerCase();
+            
+            // Если имя учителя отсутствует или указан прочерк
+            if (!cleanName || cleanName === '-' || cleanName === '—') return '';
+
+            const found = hwMapBySurname.find(item => cleanName.includes(item.key));
+            return found ? found.val : '?';
+        }
 
         // 1. Отримання даних з Google Sheet CSV
         async function readGoogleSheet() {
@@ -223,10 +268,8 @@
             }
         }
 
-        // 2. Групування даних по днях (з суворим збігом назви дня)
+        // 2. Групування даних по днях
         function groupDataByDay(rows) {
-            console.log('Отримані рядки з таблиці:', rows);
-            
             const days = {};
             let currentDay = '';
 
@@ -235,15 +278,12 @@
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
 
-                // Перевіряємо, чи є комірка, яка СТРОГО містить ЛИШЕ назву дня тижня
                 const dayCell = row.find(cell => {
-                    // Видаляємо пробіли та розділові знаки по краях для чистого порівняння
                     const cleanCell = cell.trim().toLowerCase().replace(/^[^a-zA-Zа-яА-ЯіІїЇєЄґҐ']+|[^a-zA-Zа-яА-ЯіІїЇєЄґҐ']+$/g, '');
                     return dayKeywords.some(keyword => cleanCell === keyword);
                 });
 
                 if (dayCell) {
-                    // Зберігаємо ТОЧНИЙ оригінальний текст з комірки
                     currentDay = dayCell.trim();
                     if (!days[currentDay]) {
                         days[currentDay] = [];
@@ -251,13 +291,11 @@
                     return;
                 }
 
-                // Перевіряємо, чи є рядок заголовком таблиці (пропускаємо його)
                 const firstCell = (row[0] || '').toLowerCase();
                 if (firstCell === '№' || firstCell === 'n' || firstCell === 'num' || firstCell.includes('час')) {
                     return;
                 }
 
-                // Записуємо дані уроку, якщо поточний день вже визначений і є номер/час/предмет
                 if (currentDay && (row[0] || row[1] || row[2])) {
                     days[currentDay].push({
                         num: row[0] || '',
@@ -289,9 +327,21 @@
                 if (lessons.length === 0) continue;
 
                 const rowsHTML = lessons.map(lesson => {
-                    const subjectContent = (lesson.link && lesson.link.startsWith('http'))
-                        ? `<a href="${lesson.link}" target="_blank" class="lesson-link">${lesson.subject}</a>`
+                    // Подмена ссылки для математики
+                    const isMath = lesson.subject.toLowerCase().includes('математика');
+                    const mathZoomLink = 'https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1';
+                    const targetLink = isMath ? mathZoomLink : lesson.link;
+
+                    const subjectContent = (targetLink && targetLink.startsWith('http'))
+                        ? `<a href="${targetLink}" target="_blank" class="lesson-link">${lesson.subject}</a>`
                         : `<span class="lesson-no-link">${lesson.subject}</span>`;
+                    
+                    // Проверка на слово "асинхронний"
+                    const isAsync = (lesson.mode || '').toLowerCase().includes('асинхрон');
+                    const modeClass = isAsync ? 'lesson-mode mode-async' : 'lesson-mode';
+
+                    // Получаем адрес ДЗ
+                    const hwAddress = getHwAddress(lesson.teacher);
 
                     return `
                         <tr>
@@ -299,7 +349,8 @@
                             <td class="lesson-time">${lesson.time}</td>
                             <td>${subjectContent}</td>
                             <td class="teacher-name">${lesson.teacher}</td>
-                            <td class="lesson-mode">${lesson.mode}</td>
+                            <td class="hw-address">${hwAddress}</td>
+                            <td class="${modeClass}">${lesson.mode}</td>
                         </tr>
                     `;
                 }).join('');
@@ -314,6 +365,7 @@
                                     <th class="col-time">Час</th>
                                     <th class="col-subject">Предмет</th>
                                     <th class="col-teacher">Вчитель</th>
+                                    <th class="col-hw">Адреса ДЗ</th>
                                     <th class="col-mode">Режим</th>
                                 </tr>
                             </thead>
@@ -342,9 +394,66 @@
 
         document.addEventListener('DOMContentLoaded', initSchedule);
 
+        //=============================================================================
+        const SOUND_URL = "1.mp3";
+
+        const alarmTimes = [
+            { hour: 8, minute: 29 },
+            { hour: 9, minute: 24 },
+            { hour: 10, minute: 14 },
+            { hour: 11, minute: 04 },
+            { hour: 12, minute: 04 },
+            { hour: 12, minute: 54 },
+            { hour: 15, minute: 07 },
+            { hour: 15, minute: 08 },
+        ];
+
         function startScheduler() {
-            document.getElementById('status').innerText = 'Звук активовано!';
+            const btn = document.getElementById('startBtn');
+            const statusDiv = document.getElementById('status');
+            
+            btn.disabled = true;
+            btn.style.backgroundColor = '#16a34a';
+            btn.innerText = "Дзвоник активовано ⏰";
+            statusDiv.innerHTML = "Чекаємо на наступний урок...";
+
+            const initAudio = new Audio(SOUND_URL);
+            initAudio.volume = 0;
+            initAudio.play().catch(() => {});
+
+            setInterval(() => {
+                checkTime(statusDiv);
+            }, 60000);
+
+            checkTime(statusDiv);
         }
+
+        function checkTime(statusElement) {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+
+            const hasAlarm = alarmTimes.some(time => time.hour === currentHour && time.minute === currentMinute);
+
+            if (hasAlarm) {
+                playSound(statusElement);
+            }
+        }
+
+        function playSound(statusElement) {
+            const audio = new Audio(SOUND_URL);
+            audio.play()
+                .then(() => {
+                    statusElement.innerHTML = "<span style='color: green;'>🔔 Пора на урок!</span>";
+                    setTimeout(() => {
+                        statusElement.innerHTML = "Чекаємо на наступний урок...";
+                    }, 10000);
+                })
+                .catch(error => {
+                    statusElement.innerHTML = "<span style='color: red;'>Помилка звука. Перезавантажте сторінку!</span>";
+                    console.error(error);
+                });
+        }        
     </script>
 </body>
 </html>
