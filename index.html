@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" href="favicon.png" type="image/png">
+    <link rel="icon" href="favicon.png" type="image/png">
     <title>5-А Розклад занять з онлайн-посиланнями</title>
     <style>
         :root {
@@ -28,7 +28,7 @@
         }
         header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             width: 100%;
             max-width: 900px;
         }
@@ -36,6 +36,29 @@
             color: var(--primary-color);
             margin: 0 0 10px 0;
             font-size: 2rem;
+        }
+        .container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #startBtn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #startBtn:hover {
+            background-color: #1d4ed8;
+        }
+        #status {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
         .schedule-container {
             width: 100%;
@@ -86,21 +109,23 @@
             background-color: var(--bg-color);
         }
         
+        /* Розм?ри колонок */
         .col-num { width: 6%; text-align: center; border-right: 1px solid var(--border-color); }
-        .col-time { width: 14%; white-space: nowrap; border-right: 1px solid var(--border-color); }
-        .col-subject { width: 50%; }
-        .col-teacher { width: 30%; border-left: 1px solid var(--border-color); }
+        .col-time { width: 15%; white-space: nowrap; border-right: 1px solid var(--border-color); }
+        .col-subject { width: 37%; }
+        .col-teacher { width: 26%; border-left: 1px solid var(--border-color); }
+        .col-mode { width: 16%; border-left: 1px solid var(--border-color); text-align: center; }
 
         .lesson-num {
             font-weight: 700;
             color: var(--primary-color);
             text-align: center;
-			border-right: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
         }
         .lesson-time {
             color: var(--text-muted);
             font-size: 0.85rem;
-			border-right: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
         }
         .lesson-link {
             color: var(--link-color);
@@ -111,22 +136,30 @@
             text-decoration: underline;
         }
         .lesson-no-link {
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text-main);
         }
         .teacher-name {
             color: var(--text-muted);
             font-size: 0.9rem;
             font-style: italic;
-			border-left: 1px solid var(--border-color);
+            border-left: 1px solid var(--border-color);
         }
+        .lesson-mode {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-left: 1px solid var(--border-color);
+            text-align: center;
+        }
+
         @media screen and (max-width: 768px) {
             table { table-layout: auto; }
-            .col-num, .col-time, .col-subject, .col-teacher { width: auto; }
+            .col-num, .col-time, .col-subject, .col-teacher, .col-mode { width: auto; }
             thead { display: none; }
             tr { display: flex; flex-direction: column; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
             tr:last-child { border-bottom: none; }
             td { padding: 4px 0; }
-            .lesson-num { text-align: left; }
+            .lesson-num, .lesson-mode { text-align: left; }
             .lesson-num::before { content: "Урок № "; }
         }
     </style>
@@ -136,364 +169,182 @@
     <header>
         <h1>5-А Розклад занять з онлайн-посиланнями</h1>
     </header>
-	<div class="container">
-		<button id="startBtn" onclick="startScheduler()">Активувати дзвоник</button>
-		<div id="status">Натисни кнопку для активації звука</div>
-	</div>
 
-    <div class="schedule-container">
-
-        <!-- ПОНЕДІЛОК -->
-        <div class="day-block">
-            <div class="day-title">Понеділок</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="col-num">№</th>
-                        <th class="col-time">Час</th>
-                        <th class="col-subject">Предмет</th>
-                        <th class="col-teacher">Вчитель</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="lesson-num">1</td>
-                        <td class="lesson-time">08:30 - 09:15</td>
-                        <td><a href="https://us05web.zoom.us/j/82431320468?pwd=8dF6LfFcZaIGRIFgGeLwnvaHIXFFQx.1" target="_blank" class="lesson-link">Інтегрований курс "Пізнаємо природу"</a></td>
-                        <td class="teacher-name">Зоя Василівна Скрепіль</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">2</td>
-                        <td class="lesson-time">09:25 - 10:10</td>
-                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
-                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">3</td>
-                        <td class="lesson-time">10:15 - 11:00</td>
-                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська мова</a></td>
-                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">4</td>
-                        <td class="lesson-time">11:05 - 11:50</td>
-                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська література</a></td>
-                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">5</td>
-                        <td class="lesson-time">12:05 - 12:50</td>
-                        <td><a href="https://us05web.zoom.us/j/85072312027?pwd=gX78CHZQoddeOeO75XVvY3lY40OXdu.1" target="_blank" class="lesson-link">Інформатика</a></td>
-                        <td class="teacher-name">Наталія Володимирівна Лобанова</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">6</td>
-                        <td class="lesson-time">12:55 - 13:40</td>
-                        <td><a href="https://us04web.zoom.us/j/7815145204?pwd=q6qX9aszvHD3O4hOStHIjSajbcpkXq.1" target="_blank" class="lesson-link">Інтегрований курс "Мистецтво"</a></td>
-                        <td class="teacher-name">Вікторія Сергіївна Мухіна</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- ВІВТОРОК -->
-        <div class="day-block">
-            <div class="day-title">Вівторок</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="col-num">№</th>
-                        <th class="col-time">Час</th>
-                        <th class="col-subject">Предмет</th>
-                        <th class="col-teacher">Вчитель</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="lesson-num">1</td>
-                        <td class="lesson-time">08:30 - 09:15</td>
-                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Етика</a></td>
-                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">2</td>
-                        <td class="lesson-time">09:25 - 10:10</td>
-                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
-                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">3</td>
-                        <td class="lesson-time">10:15 - 11:00</td>
-                        <td><a href="https://us05web.zoom.us/j/5654262686?pwd=R1awuc67LN8KO0yiExjEuF4vRiuXZ4.1" target="_blank" class="lesson-link">Інтегрований курс "Вступ до історії України та громадянської освіти"</a></td>
-                        <td class="teacher-name">Крістіна Володимирівна Кротова</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">4</td>
-                        <td class="lesson-time">11:05 - 11:50</td>
-                        <td><a href="http://meet.google.com/dtk-pchw-rdg" target="_blank" class="lesson-link">Інтегрований курс "Здоров'я, безпека та добробут"</a></td>
-                        <td class="teacher-name">Анжеліка Миколаївна Демидова</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">5</td>
-                        <td class="lesson-time">12:05 - 12:50</td>
-                        <td><a href="https://us05web.zoom.us/j/82430791395?pwd=ZytxY1M4TzJSaWdTVVY5cElJRlFudz09" target="_blank" class="lesson-link">Іноземна мова (англійська)</a></td>
-                        <td class="teacher-name">Яніна Олександрівна Матвєєва</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="2" class="lesson-num">6</td>
-                        <td rowspan="2" class="lesson-time">12:55 - 13:40</td>
-                        <td><a href="https://us05web.zoom.us/j/7909395864?pwd%3DMkoyMHhMeGtINUlNQXZJT3FZNXk1Zz09&sa=D&source=editors&ust=1788336592674091&usg=AOvVaw1oDKE7c4ifVbXtEo7MUoXJ" target="_blank" class="lesson-link">Друга іноземна мова (німецька) (1гр)</a></td>
-                        <td class="teacher-name">Віталій Вікторович Іщенко</td>
-                    </tr>
-					<tr>
-                        <td><a href="https://us04web.zoom.us/j/77254063267?pwd=f7p2nR7aypizODSX59G6i0rYSwKATd.1" target="_blank" class="lesson-link">Друга іноземна мова (німецька) (2гр)</a></td>
-                        <td class="teacher-name">Тетяна Сергіївна Сергєєвська</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">7</td>
-                        <td class="lesson-time">13:45 - 14:30</td>
-                        <td><a href="http://meet.google.com/dtk-pchw-rdg" target="_blank" class="lesson-link">Фізична культура</a></td>
-                        <td class="teacher-name">Анжеліка Миколаївна Демидова</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- СЕРЕДА -->
-        <div class="day-block">
-            <div class="day-title">Середа</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="col-num">№</th>
-                        <th class="col-time">Час</th>
-                        <th class="col-subject">Предмет</th>
-                        <th class="col-teacher">Вчитель</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="lesson-num">1</td>
-                        <td class="lesson-time">08:30 - 09:15</td>
-                        <td><a href="https://us05web.zoom.us/j/82430791395?pwd=ZytxY1M4TzJSaWdTVVY5cElJRlFudz09" target="_blank" class="lesson-link">Іноземна мова (англійська)</a></td>
-                        <td class="teacher-name">Яніна Олександрівна Матвєєва</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">2</td>
-                        <td class="lesson-time">09:25 - 10:10</td>
-                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
-                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">3</td>
-                        <td class="lesson-time">10:15 - 11:00</td>
-                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська мова</a></td>
-                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">4</td>
-                        <td class="lesson-time">11:05 - 11:50</td>
-                        <td><a href="https://us05web.zoom.us/j/82431320468?pwd=8dF6LfFcZaIGRIFgGeLwnvaHIXFFQx.1" target="_blank" class="lesson-link">Інтегрований курс "Пізнаємо природу"</a></td>
-                        <td class="teacher-name">Зоя Василівна Скрепіль</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">5</td>
-                        <td class="lesson-time">12:05 - 12:50</td>
-                        <td><a href="https://us05web.zoom.us/j/85072312027?pwd=gX78CHZQoddeOeO75XVvY3lY40OXdu.1" target="_blank" class="lesson-link">Інформатика</a></td>
-                        <td class="teacher-name">Наталія Володимирівна Лобанова</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">6</td>
-                        <td class="lesson-time">12:55 - 13:40</td>
-                        <td><a href="http://meet.google.com/dtk-pchw-rdg" target="_blank" class="lesson-link">Фізична культура</a></td>
-                        <td class="teacher-name">Анжеліка Миколаївна Демидова</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- ЧЕТВЕР -->
-        <div class="day-block">
-            <div class="day-title">Четвер</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="col-num">№</th>
-                        <th class="col-time">Час</th>
-                        <th class="col-subject">Предмет</th>
-                        <th class="col-teacher">Вчитель</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td rowspan="2" class="lesson-num">1</td>
-                        <td rowspan="2" class="lesson-time">08:30 - 09:15</td>
-                        <td><a href="https://us05web.zoom.us/j/7909395864?pwd%3DMkoyMHhMeGtINUlNQXZJT3FZNXk1Zz09&sa=D&source=editors&ust=1788336592674091&usg=AOvVaw1oDKE7c4ifVbXtEo7MUoXJ" target="_blank" class="lesson-link">Друга іноземна мова (німецька) (1гр)</a></td>
-                        <td class="teacher-name">Віталій Вікторович Іщенко</td>
-                    </tr>
-					<tr>
-                        <td><a href="https://us04web.zoom.us/j/77254063267?pwd=f7p2nR7aypizODSX59G6i0rYSwKATd.1" target="_blank" class="lesson-link">Друга іноземна мова (німецька) (2гр)</a></td>
-                        <td class="teacher-name">Тетяна Сергіївна Сергєєвська</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">2</td>
-                        <td class="lesson-time">09:25 - 10:10</td>
-                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
-                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">3</td>
-                        <td class="lesson-time">10:15 - 11:00</td>
-                        <td><a href="https://us05web.zoom.us/j/82430791395?pwd=ZytxY1M4TzJSaWdTVVY5cElJRlFudz09" target="_blank" class="lesson-link">Іноземна мова (англійська)</a></td>
-                        <td class="teacher-name">Яніна Олександрівна Матвєєва</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">4</td>
-                        <td class="lesson-time">11:05 - 11:50</td>
-                        <td><a href="http://meet.google.com/dtk-pchw-rdg" target="_blank" class="lesson-link">Фізична культура</a></td>
-                        <td class="teacher-name">Анжеліка Миколаївна Демидова</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">5</td>
-                        <td class="lesson-time">12:05 - 12:50</td>
-                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська мова</a></td>
-                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">6</td>
-                        <td class="lesson-time">12:55 - 13:40</td>
-                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська література</a></td>
-                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- П'ЯТНИЦЯ -->
-        <div class="day-block">
-            <div class="day-title">П'ятниця</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="col-num">№</th>
-                        <th class="col-time">Час</th>
-                        <th class="col-subject">Предмет</th>
-                        <th class="col-teacher">Вчитель</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="lesson-num">1</td>
-                        <td class="lesson-time">08:30 - 09:15</td>
-                        <td><a href="https://us05web.zoom.us/j/82430791395?pwd=ZytxY1M4TzJSaWdTVVY5cElJRlFudz09" target="_blank" class="lesson-link">Іноземна мова (англійська)</a></td>
-                        <td class="teacher-name">Яніна Олександрівна Матвєєва</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">2</td>
-                        <td class="lesson-time">09:25 - 10:10</td>
-                        <td><a href="https://us05web.zoom.us/j/5654262686?pwd=R1awuc67LN8KO0yiExjEuF4vRiuXZ4.1" target="_blank" class="lesson-link">Інтегрований курс "Вступ до історії України та громадянської освіти"</a></td>
-                        <td class="teacher-name">Крістіна Володимирівна Кротова</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">3</td>
-                        <td class="lesson-time">10:15 - 11:00</td>
-                        <td><a href="https://us04web.zoom.us/j/76501169668?pwd=a9I4HBqVa9yH1AIOkBsmuVKdrPRi1Q.1" target="_blank" class="lesson-link">Українська мова</a></td>
-                        <td class="teacher-name">Катерина Олександрівна Синельник</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">4</td>
-                        <td class="lesson-time">11:05 - 11:50</td>
-                        <td><a href="https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1" target="_blank" class="lesson-link">Математика</a></td>
-                        <td class="teacher-name">Дмитро Леонтійович Семеняка</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">5</td>
-                        <td class="lesson-time">12:05 - 12:50</td>
-                        <td><a href="https://us05web.zoom.us/j/84775108035?pwd=TzQ1Mm5tdFF3MmFsUWttajYwd1o5dz09" target="_blank" class="lesson-link">Зарубіжна література</a></td>
-                        <td class="teacher-name">Оксана Анатоліївна Середа</td>
-                    </tr>
-                    <tr>
-                        <td class="lesson-num">6</td>
-                        <td class="lesson-time">12:55 - 13:40</td>
-                        <td><a href="https://us05web.zoom.us/j/87234444805?pwd=Rmt3SW80cVBCaFNvZWsrMzd4VHlkQT09" target="_blank" class="lesson-link">Технології</a></td>
-                        <td class="teacher-name">Яна Миколаївна Олійник</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
+    <div class="container">
+        <button id="startBtn" onclick="startScheduler()">Активувати дзвоник</button>
+        <div id="status">Натисни кнопку для активац?ї звука</div>
     </div>
 
-<script>
-// Ссылка на аудиофайл
-const SOUND_URL = "1.mp3";
+    <div class="schedule-container" id="schedule-container">
+        <p style="text-align: center; color: var(--text-muted);">Завантаження розкладу...</p>
+    </div>
 
-// 1. МАССИВ ВРЕМЕННЫХ ТОЧЕК. Сюда можно добавлять любое количество времени.
-const alarmTimes = [
-    { hour: 8, minute: 29 },
-    { hour: 9, minute: 24 },
-	{ hour: 10, minute: 14 },
-	{ hour: 11, minute: 04 },
-	{ hour: 12, minute: 04 },
-    { hour: 12, minute: 54 }
-];
+    <script>
+        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRZdRAF8dkzjJh0lOpeZkSOsfqfBf62pM8VT-XWZJ7iUwkY_69VBD1_GVfexY5OE2Fv4xkRC74v2rlR/pub?output=csv';
 
-function startScheduler() {
-    const btn = document.getElementById('startBtn');
-    const statusDiv = document.getElementById('status');
-    
-    btn.disabled = true;
-    btn.innerText = "Дзвоник активовано ⏰";
-    statusDiv.innerHTML = "Чекаємо на наступний урок...";
+        // 1. Отримання даних з Google Sheet CSV
+        async function readGoogleSheet() {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Помилка мереж?: ${response.status}`);
+                
+                const text = await response.text();
+                const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
+                
+                return lines.map(line => {
+                    const row = [];
+                    let cell = '';
+                    let inQuotes = false;
+                    
+                    for (let i = 0; i < line.length; i++) {
+                        const char = line[i];
+                        const nextChar = line[i + 1];
+                        
+                        if (char === '"') {
+                            if (inQuotes && nextChar === '"') {
+                                cell += '"';
+                                i++;
+                            } else {
+                                inQuotes = !inQuotes;
+                            }
+                        } else if (char === ',' && !inQuotes) {
+                            row.push(cell.trim());
+                            cell = '';
+                        } else {
+                            cell += char;
+                        }
+                    }
+                    row.push(cell.trim());
+                    return row;
+                });
+            } catch (error) {
+                console.error('Помилка зчитування таблиц?:', error);
+                return null;
+            }
+        }
 
-    // Позволяет проиграть пустой звук сразу после клика, 
-    // чтобы окончательно «разблокировать» аудио-движок браузера
-    const initAudio = new Audio(SOUND_URL);
-    initAudio.volume = 0;
-    initAudio.play().catch(() => {});
+        // 2. Групування даних по днях (з суворим зб?гом назви дня)
+        function groupDataByDay(rows) {
+            console.log('Отриман? рядки з таблиц?:', rows);
+            
+            const days = {};
+            let currentDay = '';
 
-    // 2. ЗАПУСК ЕЖЕМИНУТНОЙ ПРОВЕРКИ
-    // Функция checkTime будет срабатывать каждые 60 000 миллисекунд (1 минута)
-    setInterval(() => {
-        checkTime(statusDiv);
-    }, 60000);
+            const dayKeywords = ['понед?лок', 'в?второк', 'середа', 'четвер', 'п\'ятниця', 'п'ятниця', 'субота', 'нед?ля'];
 
-    // Делаем также один моментальный запуск при нажатии, 
-    // чтобы не ждать целую минуту до первой проверки
-    checkTime(statusDiv);
-}
+            rows.forEach(row => {
+                if (!row || row.length === 0) return;
 
-function checkTime(statusElement) {
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
+                // Перев?ряємо, чи є ком?рка, яка СТРОГО м?стить ЛИШЕ назву дня тижня
+                const dayCell = row.find(cell => {
+                    // Видаляємо проб?ли та розд?лов? знаки по краях для чистого пор?вняння
+                    const cleanCell = cell.trim().toLowerCase().replace(/^[^a-zA-Zа-яА-Я??їЇєЄ??']+|[^a-zA-Zа-яА-Я??їЇєЄ??']+$/g, '');
+                    return dayKeywords.some(keyword => cleanCell === keyword);
+                });
 
-    // Каждую минуту выводим в консоль текущее время для контроля
-    console.log(`Проверка времени... Сейчас: ${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`);
+                if (dayCell) {
+                    // Збер?гаємо ТОЧНИЙ ориг?нальний текст з ком?рки
+                    currentDay = dayCell.trim();
+                    if (!days[currentDay]) {
+                        days[currentDay] = [];
+                    }
+                    return;
+                }
 
-    // 3. ПРОВЕРЯЕМ, СОВПАДАЕТ ЛИ СЕЙЧАС ХОТЯ БЫ С ОДНОЙ ТОЧКОЙ ИЗ МАССИВА
-    const hasAlarm = alarmTimes.some(time => time.hour === currentHour && time.minute === currentMinute);
+                // Перев?ряємо, чи є рядок заголовком таблиц? (пропускаємо його)
+                const firstCell = (row[0] || '').toLowerCase();
+                if (firstCell === '№' || firstCell === 'n' || firstCell === 'num' || firstCell.includes('час')) {
+                    return;
+                }
 
-    if (hasAlarm) {
-        playSound(statusElement);
-    }
-}
+                // Записуємо дан? уроку, якщо поточний день вже визначений ? є номер/час/предмет
+                if (currentDay && (row[0] || row[1] || row[2])) {
+                    days[currentDay].push({
+                        num: row[0] || '',
+                        time: row[1] || '',
+                        subject: row[2] || '',
+                        teacher: row[3] || '',
+                        link: row[4] || '',
+                        mode: row[5] || ''
+                    });
+                }
+            });
 
-function playSound(statusElement) {
-    const audio = new Audio(SOUND_URL);
-    audio.play()
-        .then(() => {
-            statusElement.innerHTML = "<span style='color: green;'>🔔 Пора на урок!</span>";
-            // Через 10 секунд возвращаем стандартный статус ожидания
-            setTimeout(() => {
-                statusElement.innerHTML = "Чекаємо на наступний урок...";
-            }, 10000);
-        })
-        .catch(error => {
-            statusElement.innerHTML = "<span style='color: red;'>Помилка звука. Перезавантажте сторінку!</span>";
-            console.error(error);
-        });
-}
-</script>
+            return days;
+        }
+
+        // 3. В?дображення сформованого HTML
+        function renderSchedule(groupedData) {
+            const container = document.getElementById('schedule-container');
+            let fullHTML = '';
+
+            const dayEntries = Object.entries(groupedData);
+
+            if (dayEntries.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: red;">Дан? у таблиц? не знайден? або мають нестандартний формат.</p>';
+                return;
+            }
+
+            for (const [dayName, lessons] of dayEntries) {
+                if (lessons.length === 0) continue;
+
+                const rowsHTML = lessons.map(lesson => {
+                    const subjectContent = (lesson.link && lesson.link.startsWith('http'))
+                        ? `<a href="${lesson.link}" target="_blank" class="lesson-link">${lesson.subject}</a>`
+                        : `<span class="lesson-no-link">${lesson.subject}</span>`;
+
+                    return `
+                        <tr>
+                            <td class="lesson-num">${lesson.num}</td>
+                            <td class="lesson-time">${lesson.time}</td>
+                            <td>${subjectContent}</td>
+                            <td class="teacher-name">${lesson.teacher}</td>
+                            <td class="lesson-mode">${lesson.mode}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                fullHTML += `
+                    <div class="day-block">
+                        <div class="day-title">${dayName}</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="col-num">№</th>
+                                    <th class="col-time">Час</th>
+                                    <th class="col-subject">Предмет</th>
+                                    <th class="col-teacher">Вчитель</th>
+                                    <th class="col-mode">Режим</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = fullHTML;
+        }
+
+        // 4. Запуск ?н?ц?ал?зац?ї
+        async function initSchedule() {
+            const rawData = await readGoogleSheet();
+            if (rawData && rawData.length > 0) {
+                const groupedData = groupDataByDay(rawData);
+                renderSchedule(groupedData);
+            } else {
+                document.getElementById('schedule-container').innerHTML = 
+                    '<p style="text-align: center; color: red;">Не вдалося завантажити розклад.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initSchedule);
+
+        function startScheduler() {
+            document.getElementById('status').innerText = 'Звук активовано!';
+        }
+    </script>
 </body>
 </html>
