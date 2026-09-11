@@ -109,7 +109,7 @@
             background-color: var(--bg-color);
         }
         
-        /* Розм?ри колонок */
+        /* Розміри колонок */
         .col-num { width: 6%; text-align: center; border-right: 1px solid var(--border-color); }
         .col-time { width: 15%; white-space: nowrap; border-right: 1px solid var(--border-color); }
         .col-subject { width: 37%; }
@@ -172,7 +172,7 @@
 
     <div class="container">
         <button id="startBtn" onclick="startScheduler()">Активувати дзвоник</button>
-        <div id="status">Натисни кнопку для активац?ї звука</div>
+        <div id="status">Натисни кнопку для активації звука</div>
     </div>
 
     <div class="schedule-container" id="schedule-container">
@@ -186,7 +186,7 @@
         async function readGoogleSheet() {
             try {
                 const response = await fetch(url);
-                if (!response.ok) throw new Error(`Помилка мереж?: ${response.status}`);
+                if (!response.ok) throw new Error(`Помилка мережі: ${response.status}`);
                 
                 const text = await response.text();
                 const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
@@ -218,32 +218,32 @@
                     return row;
                 });
             } catch (error) {
-                console.error('Помилка зчитування таблиц?:', error);
+                console.error('Помилка зчитування таблиці:', error);
                 return null;
             }
         }
 
-        // 2. Групування даних по днях (з суворим зб?гом назви дня)
+        // 2. Групування даних по днях (з суворим збігом назви дня)
         function groupDataByDay(rows) {
-            console.log('Отриман? рядки з таблиц?:', rows);
+            console.log('Отримані рядки з таблиці:', rows);
             
             const days = {};
             let currentDay = '';
 
-            const dayKeywords = ['понед?лок', 'в?второк', 'середа', 'четвер', 'п\'ятниця', 'п'ятниця', 'субота', 'нед?ля'];
+            const dayKeywords = ['понеділок', 'вівторок', 'середа', 'четвер', 'п\'ятниця', 'п’ятниця', 'субота', 'неділя'];
 
             rows.forEach(row => {
                 if (!row || row.length === 0) return;
 
-                // Перев?ряємо, чи є ком?рка, яка СТРОГО м?стить ЛИШЕ назву дня тижня
+                // Перевіряємо, чи є комірка, яка СТРОГО містить ЛИШЕ назву дня тижня
                 const dayCell = row.find(cell => {
-                    // Видаляємо проб?ли та розд?лов? знаки по краях для чистого пор?вняння
-                    const cleanCell = cell.trim().toLowerCase().replace(/^[^a-zA-Zа-яА-Я??їЇєЄ??']+|[^a-zA-Zа-яА-Я??їЇєЄ??']+$/g, '');
+                    // Видаляємо пробіли та розділові знаки по краях для чистого порівняння
+                    const cleanCell = cell.trim().toLowerCase().replace(/^[^a-zA-Zа-яА-ЯіІїЇєЄґҐ']+|[^a-zA-Zа-яА-ЯіІїЇєЄґҐ']+$/g, '');
                     return dayKeywords.some(keyword => cleanCell === keyword);
                 });
 
                 if (dayCell) {
-                    // Збер?гаємо ТОЧНИЙ ориг?нальний текст з ком?рки
+                    // Зберігаємо ТОЧНИЙ оригінальний текст з комірки
                     currentDay = dayCell.trim();
                     if (!days[currentDay]) {
                         days[currentDay] = [];
@@ -251,13 +251,13 @@
                     return;
                 }
 
-                // Перев?ряємо, чи є рядок заголовком таблиц? (пропускаємо його)
+                // Перевіряємо, чи є рядок заголовком таблиці (пропускаємо його)
                 const firstCell = (row[0] || '').toLowerCase();
                 if (firstCell === '№' || firstCell === 'n' || firstCell === 'num' || firstCell.includes('час')) {
                     return;
                 }
 
-                // Записуємо дан? уроку, якщо поточний день вже визначений ? є номер/час/предмет
+                // Записуємо дані уроку, якщо поточний день вже визначений і є номер/час/предмет
                 if (currentDay && (row[0] || row[1] || row[2])) {
                     days[currentDay].push({
                         num: row[0] || '',
@@ -273,7 +273,7 @@
             return days;
         }
 
-        // 3. В?дображення сформованого HTML
+        // 3. Відображення сформованого HTML
         function renderSchedule(groupedData) {
             const container = document.getElementById('schedule-container');
             let fullHTML = '';
@@ -281,7 +281,7 @@
             const dayEntries = Object.entries(groupedData);
 
             if (dayEntries.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: red;">Дан? у таблиц? не знайден? або мають нестандартний формат.</p>';
+                container.innerHTML = '<p style="text-align: center; color: red;">Дані у таблиці не знайдені або мають нестандартний формат.</p>';
                 return;
             }
 
@@ -328,7 +328,7 @@
             container.innerHTML = fullHTML;
         }
 
-        // 4. Запуск ?н?ц?ал?зац?ї
+        // 4. Запуск ініціалізації
         async function initSchedule() {
             const rawData = await readGoogleSheet();
             if (rawData && rawData.length > 0) {
