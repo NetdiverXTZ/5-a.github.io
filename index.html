@@ -209,7 +209,7 @@
             { key: 'демидова', val: 'andemidova@ukr.net' },
             { key: 'матвєєва', val: 'Telegram' },
             { key: 'іщенко', val: '?' },
-            { key: 'сергєєвська', val: '?' },
+            { key: 'сергєєвська', val: 'Telegram' },
             { key: 'середа', val: '?' },
             { key: 'олійник', val: 'oleynikyana89@ukr.net' },
         ];
@@ -268,7 +268,7 @@
             }
         }
 
-        // 2. Групування даних по днях
+        // 2. Групування даних по днях та обробка груп
         function groupDataByDay(rows) {
             const days = {};
             let currentDay = '';
@@ -297,15 +297,47 @@
                 }
 
                 if (currentDay && (row[0] || row[1] || row[2])) {
+                    let subjectName = row[2] || '';
+                    const teacherName = (row[3] || '').toLowerCase();
+
+                    // Модификация названия для немецкого языка
+                    if (subjectName.toLowerCase().includes('друга іноземна мова (німецька)')) {
+                        if (teacherName.includes('іщенко')) {
+                            subjectName += ' гр.1';
+                        } else if (teacherName.includes('сергєєвська')) {
+                            subjectName += ' гр.2';
+                        }
+                    }
+
                     days[currentDay].push({
                         num: row[0] || '',
                         time: row[1] || '',
-                        subject: row[2] || '',
+                        subject: subjectName,
                         teacher: row[3] || '',
                         link: row[4] || '',
                         mode: row[5] || ''
                     });
                 }
+            });
+
+            // Сортировка уроков внутри каждого дня
+            Object.keys(days).forEach(day => {
+                days[day].sort((a, b) => {
+                    const numA = parseInt(a.num, 10) || 0;
+                    const numB = parseInt(b.num, 10) || 0;
+
+                    if (numA !== numB) {
+                        return numA - numB;
+                    }
+
+                    const getGroupNum = (subj) => {
+                        if (subj.includes('гр.1')) return 1;
+                        if (subj.includes('гр.2')) return 2;
+                        return 99;
+                    };
+
+                    return getGroupNum(a.subject) - getGroupNum(b.subject);
+                });
             });
 
             return days;
@@ -404,7 +436,7 @@
             { hour: 11, minute: 04 },
             { hour: 12, minute: 04 },
             { hour: 12, minute: 54 },
-			{ hour: 13, minute: 44 }
+            { hour: 13, minute: 44 }
         ];
 
         function startScheduler() {
