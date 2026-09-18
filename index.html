@@ -539,7 +539,7 @@
             statusDiv.innerHTML = "Чекаємо на наступний урок...";
 
             const initAudio = new Audio(SOUND_URL);
-            initAudio.volume = 0;
+           // initAudio.volume = 0; //убираем звук
             initAudio.play().catch(() => {});
 
             setInterval(() => {
