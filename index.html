@@ -16,6 +16,9 @@
             --accent-bg: #eff6ff;
             --link-color: #1d4ed8;
         }
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
@@ -73,6 +76,7 @@
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             padding: 24px;
             border: 1px solid var(--border-color);
+            scroll-margin-top: 20px;
         }
         .day-title {
             font-size: 1.4rem;
@@ -168,6 +172,38 @@
             border-radius: 6px;
         }
 
+        /* Плавающие кнопки */
+        .floating-nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 1000;
+        }
+        .float-btn {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+        .float-btn:hover {
+            background-color: #1d4ed8;
+        }
+        .btn-top {
+            display: none; /* По умолчанию скрыта */
+        }
+
         @media screen and (max-width: 768px) {
             table { table-layout: auto; }
             .col-num, .col-time, .col-subject, .col-teacher, .col-hw, .col-mode { width: auto; }
@@ -177,12 +213,24 @@
             td { padding: 4px 0; }
             .lesson-num, .lesson-mode, .hw-address { text-align: left; }
             .lesson-num::before { content: "Урок № "; }
+
+            /* Адаптив для плавающих кнопок на мобильных */
+            .floating-nav {
+                right: 10px;
+                top: auto;
+                bottom: 20px;
+                transform: none;
+            }
+            .float-btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
+    <header id="page-top">
         <h1>5-А Розклад занять з онлайн-посиланнями</h1>
     </header>
 
@@ -195,8 +243,26 @@
         <p style="text-align: center; color: var(--text-muted);">Завантаження розкладу...</p>
     </div>
 
+    <!-- Контейнер для плавающих кнопок -->
+    <div class="floating-nav" id="floatingNav">
+        <div id="dayButtons" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        <button id="scrollTopBtn" class="float-btn btn-top" onclick="scrollToTop()">▲</button>
+    </div>
+
     <script>
         const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRZdRAF8dkzjJh0lOpeZkSOsfqfBf62pM8VT-XWZJ7iUwkY_69VBD1_GVfexY5OE2Fv4xkRC74v2rlR/pub?output=csv';
+
+        // Карта сопоставления полного названия дня с текстом на кнопке
+        const dayShortNames = {
+            'понеділок': 'Пн',
+            'вівторок': 'Вт',
+            'середа': 'Ср',
+            'четвер': 'Чт',
+            'п\'ятниця': 'Пт',
+            'п’ятниця': 'Пт',
+            'субота': 'Сб',
+            'неділя': 'Нд'
+        };
 
         // Карта поиска по ключевым частям фамилий
         const hwMapBySurname = [
@@ -210,24 +276,20 @@
             { key: 'матвєєва', val: 'Telegram' },
             { key: 'іщенко', val: '?' },
             { key: 'сергєєвська', val: 'Telegram' },
-            { key: 'середа', val: '?' },
+            { key: 'середа', val: 'sereda-oksana2017@ukr.net' },
             { key: 'олійник', val: 'oleynikyana89@ukr.net' },
         ];
 
-        // Функция поиска адреса ДЗ
         function getHwAddress(teacherName) {
             if (!teacherName) return '';
             
             const cleanName = teacherName.replace(/\s+/g, ' ').trim().toLowerCase();
-            
-            // Если имя учителя отсутствует или указан прочерк
             if (!cleanName || cleanName === '-' || cleanName === '—') return '';
 
             const found = hwMapBySurname.find(item => cleanName.includes(item.key));
             return found ? found.val : '?';
         }
 
-        // 1. Отримання даних з Google Sheet CSV
         async function readGoogleSheet() {
             try {
                 const response = await fetch(url);
@@ -268,7 +330,6 @@
             }
         }
 
-        // 2. Групування даних по днях та обробка груп
         function groupDataByDay(rows) {
             const days = {};
             let currentDay = '';
@@ -300,7 +361,6 @@
                     let subjectName = row[2] || '';
                     const teacherName = (row[3] || '').toLowerCase();
 
-                    // Модификация названия для немецкого языка
                     if (subjectName.toLowerCase().includes('друга іноземна мова (німецька)')) {
                         if (teacherName.includes('іщенко')) {
                             subjectName += ' гр.1';
@@ -320,7 +380,6 @@
                 }
             });
 
-            // Сортировка уроков внутри каждого дня
             Object.keys(days).forEach(day => {
                 days[day].sort((a, b) => {
                     const numA = parseInt(a.num, 10) || 0;
@@ -343,10 +402,11 @@
             return days;
         }
 
-        // 3. Відображення сформованого HTML
         function renderSchedule(groupedData) {
             const container = document.getElementById('schedule-container');
+            const dayButtonsContainer = document.getElementById('dayButtons');
             let fullHTML = '';
+            let buttonsHTML = '';
 
             const dayEntries = Object.entries(groupedData);
 
@@ -355,11 +415,13 @@
                 return;
             }
 
+            let index = 0;
             for (const [dayName, lessons] of dayEntries) {
                 if (lessons.length === 0) continue;
 
+                const dayId = `day-block-${index}`;
+
                 const rowsHTML = lessons.map(lesson => {
-                    // Подмена ссылки для математики
                     const isMath = lesson.subject.toLowerCase().includes('математика');
                     const mathZoomLink = 'https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1';
                     const targetLink = isMath ? mathZoomLink : lesson.link;
@@ -368,11 +430,9 @@
                         ? `<a href="${targetLink}" target="_blank" class="lesson-link">${lesson.subject}</a>`
                         : `<span class="lesson-no-link">${lesson.subject}</span>`;
                     
-                    // Проверка на слово "асинхронний"
                     const isAsync = (lesson.mode || '').toLowerCase().includes('асинхрон');
                     const modeClass = isAsync ? 'lesson-mode mode-async' : 'lesson-mode';
 
-                    // Получаем адрес ДЗ
                     const hwAddress = getHwAddress(lesson.teacher);
 
                     return `
@@ -388,7 +448,7 @@
                 }).join('');
 
                 fullHTML += `
-                    <div class="day-block">
+                    <div class="day-block" id="${dayId}">
                         <div class="day-title">${dayName}</div>
                         <table>
                             <thead>
@@ -407,12 +467,41 @@
                         </table>
                     </div>
                 `;
+
+                // Определение названия кнопки на основе дня недели
+                const cleanDayLower = dayName.trim().toLowerCase();
+                const shortLabel = dayShortNames[cleanDayLower] || dayName.slice(0, 2);
+
+                buttonsHTML += `<button class="float-btn" onclick="scrollToElement('${dayId}')">${shortLabel}</button>`;
+
+                index++;
             }
 
             container.innerHTML = fullHTML;
+            dayButtonsContainer.innerHTML = buttonsHTML;
         }
 
-        // 4. Запуск ініціалізації
+        function scrollToElement(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Отслеживание прокрутки для отображения/скрытия кнопки "Вгору"
+        window.addEventListener('scroll', () => {
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 100) {
+                scrollTopBtn.style.display = 'block';
+            } else {
+                scrollTopBtn.style.display = 'none';
+            }
+        });
+
         async function initSchedule() {
             const rawData = await readGoogleSheet();
             if (rawData && rawData.length > 0) {
