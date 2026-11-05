@@ -290,7 +290,8 @@
             const found = hwMapBySurname.find(item => cleanName.includes(item.key));
             return found ? found.val : '?';
         }
-
+		
+		// Считывание расписания с таблицы
         async function readGoogleSheet() {
             try {
                 const response = await fetch(url);
@@ -424,7 +425,7 @@
 
                 const rowsHTML = lessons.map(lesson => {
                     const isMath = lesson.subject.toLowerCase().includes('математика');
-                    const mathZoomLink = 'https://us02web.zoom.us/j/88644443023?pwd=vZCz1ca2lbLvJjDaknAG5VZZrBbm1p.1';
+                    const mathZoomLink = 'https://us02web.zoom.us/j/5837358988?pwd%3DMS83eU1ZZktDanJvb2lQTFEySXRBUT09';
                     const targetLink = isMath ? mathZoomLink : lesson.link;
 
                     const subjectContent = (targetLink && targetLink.startsWith('http'))
