@@ -1,6 +1,13 @@
 {
-  "last_update_id": 831187496,
+  "last_update_id": 831187498,
   "items": [
+    {
+      "message_id": 6,
+      "subject": "Вайбкоддинг",
+      "teacher": "Ogen",
+      "text": "Hello1",
+      "date_utc": "2026-11-20 15:35"
+    },
     {
       "message_id": 3,
       "subject": "Вайбкоддинг",
