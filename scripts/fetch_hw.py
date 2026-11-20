@@ -1,13 +1,14 @@
 import json
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import requests
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
-# ID группы (обычно отрицательное число, например -1001234567890)
 TARGET_CHAT_ID = int(os.environ["TARGET_CHAT_ID"])
 
-# Словарь соответствия: Telegram user_id учителя -> Предмет
+# Сколько дней хранить задания в JSON
+KEEP_DAYS = 365
+
 TEACHERS = {
     593528222: "Вайбкоддинг",
     111111111: "Математика",
@@ -16,6 +17,7 @@ TEACHERS = {
 }
 
 DATA_FILE = "data/homework.json"
+DATE_FORMAT = "%Y-%m-%d %H:%M"
 API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates"
 
 
@@ -32,6 +34,26 @@ def save_data(data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def prune_old_items(items, keep_days=KEEP_DAYS):
+    cutoff = datetime.now(timezone.utc) - timedelta(days=keep_days)
+    fresh_items = []
+
+    for item in items:
+        date_str = item.get("date_utc")
+        if not date_str:
+            fresh_items.append(item)
+            continue
+        try:
+            item_dt = datetime.strptime(date_str, DATE_FORMAT).replace(tzinfo=timezone.utc)
+            if item_dt >= cutoff:
+                fresh_items.append(item)
+        except ValueError:
+            # Если формат даты в старой записи отличается — сохраняем, чтобы не потерять
+            fresh_items.append(item)
+
+    return fresh_items
+
+
 def main():
     data = load_data()
     offset = data.get("last_update_id", 0) + 1
@@ -44,12 +66,8 @@ def main():
         raise RuntimeError(f"Telegram API error: {payload}")
 
     updates = payload.get("result", [])
-    if not updates:
-        print("Новых обновлений нет.")
-        return
-
-    new_items = []
     max_update_id = data.get("last_update_id", 0)
+    new_items = []
 
     for upd in updates:
         max_update_id = max(max_update_id, upd["update_id"])
@@ -57,7 +75,6 @@ def main():
         if not msg:
             continue
 
-        # Проверяем, что сообщение из нужной группы
         if msg.get("chat", {}).get("id") != TARGET_CHAT_ID:
             continue
 
@@ -68,9 +85,8 @@ def main():
         if not text:
             continue
 
-        # Фильтр по списку учителей
         if sender_id in TEACHERS:
-            dt = datetime.fromtimestamp(msg["date"], tz=timezone.utc).strftime("%Y-%m-%d %H:%M")
+            dt = datetime.fromtimestamp(msg["date"], tz=timezone.utc).strftime(DATE_FORMAT)
             new_items.append({
                 "message_id": msg["message_id"],
                 "subject": TEACHERS[sender_id],
@@ -80,14 +96,13 @@ def main():
             })
 
     data["last_update_id"] = max_update_id
-    if new_items:
-        # Добавляем новые задания в начало и храним последние 100 записей
-        data["items"] = (new_items + data["items"])[:100]
-        print(f"Добавлено заданий: {len(new_items)}")
-    else:
-        print("Новых заданий от учителей не найдено.")
+
+    # Объединяем старые и новые записи, затем удаляем всё старше KEEP_DAYS
+    combined = new_items + data.get("items", [])
+    data["items"] = prune_old_items(combined, KEEP_DAYS)
 
     save_data(data)
+    print(f"Новых добавлено: {len(new_items)}. Всего актуальных записей: {len(data['items'])}.")
 
 
 if __name__ == "__main__":
