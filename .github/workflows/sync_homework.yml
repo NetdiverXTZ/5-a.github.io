@@ -1,9 +1,6 @@
 name: Sync Telegram Homework
 
 on:
-  schedule:
-    - cron: "0 13,16 * * *"
-    - cron: "0 18 * * *"
   workflow_dispatch: # Позволяет запускать вручную из интерфейса GitHub
 
 permissions:
